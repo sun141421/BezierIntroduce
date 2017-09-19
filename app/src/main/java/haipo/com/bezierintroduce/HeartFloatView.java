@@ -160,9 +160,14 @@ public class HeartFloatView extends RelativeLayout {
             }
         });
 
+        ObjectAnimator asx=ObjectAnimator.ofFloat(view,"ScaleX",0,1f);
+        ObjectAnimator asy=ObjectAnimator.ofFloat(view,"ScaleY",0,1f);
+
+
         AnimatorSet set = new AnimatorSet();
         set.setDuration(3000);
-        set.play(animator).with(af);
+        set.play(animator).with(af).with(asx).with(asy);
+
         set.start();
 
     }
