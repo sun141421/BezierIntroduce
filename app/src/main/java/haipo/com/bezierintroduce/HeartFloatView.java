@@ -151,7 +151,7 @@ public class HeartFloatView extends RelativeLayout {
             }
         });
 
-        ObjectAnimator af = ObjectAnimator.ofFloat(view, "alpha", 1f, 0);
+        ObjectAnimator af = ObjectAnimator.ofFloat(view, "alpha", 1F, 0);
         af.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -160,8 +160,8 @@ public class HeartFloatView extends RelativeLayout {
             }
         });
 
-        ObjectAnimator asx=ObjectAnimator.ofFloat(view,"ScaleX",0,1f);
-        ObjectAnimator asy=ObjectAnimator.ofFloat(view,"ScaleY",0,1f);
+        ObjectAnimator asx=ObjectAnimator.ofFloat(view,"ScaleX",0.5F,1F);
+        ObjectAnimator asy=ObjectAnimator.ofFloat(view,"ScaleY",0.5F,1F);
 
 
         AnimatorSet set = new AnimatorSet();
