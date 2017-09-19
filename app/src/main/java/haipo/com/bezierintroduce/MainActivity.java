@@ -1,12 +1,10 @@
 package haipo.com.bezierintroduce;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,24 +33,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.basic:
-                basic.setVisibility(View.VISIBLE);
-                hearView.setVisibility(View.GONE);
-                advance.setVisibility(View.GONE);
-                break;
-            case R.id.advance:
-                advance.setVisibility(View.VISIBLE);
-                hearView.setVisibility(View.GONE);
-                basic.setVisibility(View.GONE);
-                break;
-            case R.id.high:
-                hearView.setVisibility(View.VISIBLE);
-                advance.setVisibility(View.GONE);
-                basic.setVisibility(View.GONE);
-                break;
 
-        }
+//        switch (item.getItemId()) {
+//            case R.id.basic:
+//                basic.setVisibility(View.VISIBLE);
+//                hearView.setVisibility(View.GONE);
+//                advance.setVisibility(View.GONE);
+//                break;
+//            case R.id.advance:
+//                advance.setVisibility(View.VISIBLE);
+//                hearView.setVisibility(View.GONE);
+//                basic.setVisibility(View.GONE);
+//                break;
+//            case R.id.high:
+//                hearView.setVisibility(View.VISIBLE);
+//                advance.setVisibility(View.GONE);
+//                basic.setVisibility(View.GONE);
+//                break;
+//
+//        }
         return super.onOptionsItemSelected(item);
     }
 }
