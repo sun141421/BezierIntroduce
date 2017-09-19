@@ -9,8 +9,10 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -33,55 +35,74 @@ public class HeartFloatView extends RelativeLayout {
     protected PointF pointFStart, pointFEnd, pointFFirst, pointFSecond;
     protected Bitmap bitmap;
 
-    private static final int[] DEFAULT_COLORS ={Color.WHITE,Color.CYAN,Color.YELLOW,Color.BLACK ,Color.LTGRAY,Color.GREEN,Color.RED};
-    private int[]colors =DEFAULT_COLORS;
+    private static final int[] DEFAULT_COLORS = {Color.WHITE, Color.CYAN, Color.YELLOW, Color.BLACK, Color.LTGRAY, Color.GREEN, Color.RED};
+    private int[] colors = DEFAULT_COLORS;
+    private Paint mPaint;
 
     public HeartFloatView(Context context) {
         super(context);
+        initView();
     }
 
     public HeartFloatView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView();
     }
 
     public HeartFloatView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public HeartFloatView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        initView();
     }
 
+    private void initView() {
+//        setBackgroundColor(Color.WHITE);
 
-    public void startAnimation(int numOfHeart,@Nullable int[] heartColors){
-          if(numOfHeart<=0){
-              numOfHeart=10;
-          }
-          if(heartColors!=null&&heartColors.length>0){
-              colors=heartColors;
-          }
-        for (int i = 0; i < numOfHeart; i++) {
-            startAnimationInteral();
-        }
-    }
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
 
-    private void startAnimationInteral(){
         pointFStart = new PointF();
         pointFFirst = new PointF();
         pointFSecond = new PointF();
         pointFEnd = new PointF();
 
-        pointFStart.x = getMeasuredWidth() / 2-bitmap.getWidth()/2;
+        random = new Random();
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
+    }
+
+    public void startAnimation(int numOfHeart, @Nullable int[] heartColors) {
+        if (numOfHeart <= 0) {
+            numOfHeart = 10;
+        }
+        if (heartColors != null && heartColors.length > 0) {
+            colors = heartColors;
+        }
+        for (int i = 0; i < numOfHeart; i++) {
+            startAnimationInteral();
+        }
+    }
+
+    private void startAnimationInteral() {
+        pointFStart = new PointF();
+        pointFFirst = new PointF();
+        pointFSecond = new PointF();
+        pointFEnd = new PointF();
+
+        pointFStart.x = getMeasuredWidth() / 2 - bitmap.getWidth() / 2;
         pointFStart.y = getMeasuredHeight() - bitmap.getHeight();
 
         pointFEnd.y = 0;
-        pointFEnd.x = random.nextFloat()*getMeasuredWidth();
+        pointFEnd.x = random.nextFloat() * getMeasuredWidth();
 
-        pointFFirst.x = random.nextFloat()*getMeasuredWidth();
+        pointFFirst.x = random.nextFloat() * getMeasuredWidth();
         pointFSecond.x = getMeasuredWidth() - pointFFirst.x;
-        pointFSecond.y = random.nextFloat()*getMeasuredHeight() / 2+getMeasuredHeight()/2;
-        pointFFirst.y = random.nextFloat()*getMeasuredHeight()  / 2;
+        pointFSecond.y = random.nextFloat() * getMeasuredHeight() / 2 + getMeasuredHeight() / 2;
+        pointFFirst.y = random.nextFloat() * getMeasuredHeight() / 2;
         addHeart();
     }
 
@@ -99,13 +120,13 @@ public class HeartFloatView extends RelativeLayout {
     private Bitmap drawHeart(int color) {
         Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(newBitmap);
-        canvas.drawBitmap(bitmap, 0, 0, null);
+        canvas.drawBitmap(bitmap, 0, 0, mPaint);
         canvas.drawColor(color, PorterDuff.Mode.SRC_ATOP);
         canvas.setBitmap(null);
         return newBitmap;
     }
 
-    private void moveHeart(final ImageView view){
+    private void moveHeart(final ImageView view) {
         PointF pointFFirst = this.pointFFirst;
         PointF pointFSecond = this.pointFSecond;
         PointF pointFStart = this.pointFStart;
@@ -152,10 +173,10 @@ public class HeartFloatView extends RelativeLayout {
      */
     private class TypeE implements TypeEvaluator<PointF> {
 
-        private PointF pointFFirst,pointFSecond;
+        private PointF pointFFirst, pointFSecond;
 
-        TypeE(PointF start, PointF end){
-            this.pointFFirst =start;
+        TypeE(PointF start, PointF end) {
+            this.pointFFirst = start;
             this.pointFSecond = end;
         }
 
@@ -163,8 +184,8 @@ public class HeartFloatView extends RelativeLayout {
         public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
             PointF result = new PointF();
             float left = 1 - fraction;
-            result.x = (float) (startValue.x*Math.pow(left,3)+3*pointFFirst.x*Math.pow(left,2)*fraction+3*pointFSecond.x*Math.pow(fraction, 2)*left+endValue.x*Math.pow(fraction,3));
-            result.y= (float) (startValue.y*Math.pow(left,3)+3*pointFFirst.y*Math.pow(left,2)*fraction+3*pointFSecond.y*Math.pow(fraction, 2)*left+endValue.y*Math.pow(fraction,3));
+            result.x = (float) (startValue.x * Math.pow(left, 3) + 3 * pointFFirst.x * Math.pow(left, 2) * fraction + 3 * pointFSecond.x * Math.pow(fraction, 2) * left + endValue.x * Math.pow(fraction, 3));
+            result.y = (float) (startValue.y * Math.pow(left, 3) + 3 * pointFFirst.y * Math.pow(left, 2) * fraction + 3 * pointFSecond.y * Math.pow(fraction, 2) * left + endValue.y * Math.pow(fraction, 3));
             return result;
         }
     }
