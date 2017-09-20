@@ -16,7 +16,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -38,6 +37,8 @@ public class HeartFloatView extends RelativeLayout {
     private static final int[] DEFAULT_COLORS = {Color.WHITE, Color.CYAN, Color.YELLOW, Color.BLACK, Color.LTGRAY, Color.GREEN, Color.RED};
     private int[] colors = DEFAULT_COLORS;
     private Paint mPaint;
+
+    private Animator.AnimatorListener callback;
 
     public HeartFloatView(Context context) {
         super(context);
@@ -61,8 +62,6 @@ public class HeartFloatView extends RelativeLayout {
     }
 
     private void initView() {
-//        setBackgroundColor(Color.WHITE);
-
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
 
@@ -74,8 +73,12 @@ public class HeartFloatView extends RelativeLayout {
         random = new Random();
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
     }
-
-    public void startAnimation(int numOfHeart, @Nullable int[] heartColors) {
+    /**
+     * 启动动画
+     * @param numOfHeart 心的数量,小于等于0则是默认的10
+     * @param heartColors 心的颜色数组   为null则使用默认的颜色数组
+     * */
+    public void startAnimation(int numOfHeart, int[] heartColors) {
         if (numOfHeart <= 0) {
             numOfHeart = 10;
         }
@@ -85,6 +88,19 @@ public class HeartFloatView extends RelativeLayout {
         for (int i = 0; i < numOfHeart; i++) {
             startAnimationInteral();
         }
+    }
+    /**
+     * 设置自己的图片
+     * */
+    public void setFloatBitmap(Bitmap newBitmap){
+        if(newBitmap!=null){
+            bitmap=newBitmap;
+        }
+    }
+
+    /**设置动画回掉*/
+    public void setCallback(Animator.AnimatorListener callback) {
+        this.callback = callback;
     }
 
     private void startAnimationInteral() {
@@ -134,6 +150,7 @@ public class HeartFloatView extends RelativeLayout {
 
 
         ValueAnimator animator = ValueAnimator.ofObject(new TypeE(pointFFirst, pointFSecond), pointFStart, pointFEnd);
+        animator.setDuration(3000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -152,6 +169,8 @@ public class HeartFloatView extends RelativeLayout {
         });
 
         ObjectAnimator af = ObjectAnimator.ofFloat(view, "alpha", 1F, 0);
+        af.setStartDelay(1000);
+        af.setDuration(2000);
         af.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -161,13 +180,16 @@ public class HeartFloatView extends RelativeLayout {
         });
 
         ObjectAnimator asx=ObjectAnimator.ofFloat(view,"ScaleX",0.5F,1F);
+        asx.setDuration(3000);
         ObjectAnimator asy=ObjectAnimator.ofFloat(view,"ScaleY",0.5F,1F);
-
+        asy.setDuration(3000);
 
         AnimatorSet set = new AnimatorSet();
-        set.setDuration(3000);
+//        set.setDuration(3000);
         set.play(animator).with(af).with(asx).with(asy);
-
+        if(callback!=null){
+            set.addListener(callback);
+        }
         set.start();
 
     }
